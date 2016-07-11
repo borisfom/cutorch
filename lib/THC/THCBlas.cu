@@ -207,6 +207,11 @@ void THCudaBlas_Sgemm(THCState *state, char transa, char transb, long m, long n,
 }
 
 #ifdef CUDA_HALF_TENSOR
+// In CUDA 8.0, definition of data types for sgemmex changed
+#if CUDA_VERSION < 8000
+#  define CUDA_R_16F CUBLAS_DATA_HALF
+#endif
+
 void THCudaBlas_Hgemm(THCState *state, char transa, char transb, long m, long n, long k, half alpha, half *a, long lda, half *b, long ldb, half beta, half *c, long ldc)
 {
   adjustLd(transa, transb, m, n, k, &lda, &ldb, &ldc);
@@ -231,7 +236,8 @@ void THCudaBlas_Hgemm(THCState *state, char transa, char transb, long m, long n,
       float fBeta = THC_half2float(beta);
 
       THCublasCheck(cublasSgemmEx(THCState_getCurrentBlasHandle(state), opa, opb, i_m, i_n, i_k, &fAlpha,
-                                  a, CUBLAS_DATA_HALF, i_lda, b, CUBLAS_DATA_HALF, i_ldb, &fBeta, c, CUBLAS_DATA_HALF, i_ldc));
+                                  a, CUDA_R_16F, i_lda, b, CUDA_R_16F, i_ldb, &fBeta, c, CUDA_R_16F, i_ldc));
+
     }
 
     return;

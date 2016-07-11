@@ -64,7 +64,6 @@ IF(APPLE)
   ENDIF()
   # CUDA 7 supports clang and libc++ so no need to change anything
 ENDIF(APPLE)
-
 # Detect CUDA architecture and get best NVCC flags
 IF(COMMAND CUDA_SELECT_NVCC_ARCH_FLAGS)
 # New CMake function, comes with FindCUDA
@@ -203,6 +202,8 @@ INSTALL(FILES
           generic/THCTensorMasked.cu
           generic/THCTensorMath.h
           generic/THCTensorMath.cu
+          generic/THCTensorMathBlas.cu
+          generic/THCTensorMathBlas.h
           generic/THCTensorMathCompare.h
           generic/THCTensorMathCompare.cu
           generic/THCTensorMathCompareT.h
